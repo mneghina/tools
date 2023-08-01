@@ -6,6 +6,8 @@ if [ $# -eq 0 ]; then
 fi
 
 input_string="$1"
+ascii_final= " "
+hex_final=""
 
 for (( i=0; i<${#input_string}; i++ )); do
 
@@ -29,12 +31,19 @@ for (( i=0; i<${#input_string}; i++ )); do
   hex_part2=$(printf "%X" "$((2#$part2_padded))")
 
   ascii_part1=$(printf "\\x$hex_part1")
-  ascii_part2=$(echo "\\x$hex_part2")
+  ascii_part2=$(printf "\\x$hex_part2")
 
-  echo -e "Original binary for $char: \033[32m${part1_original}\033[0m\033[94m${part2}\033[0m"
+  hex_final+="${hex_part1}${hex_part2} "
+  ascii_final+="${ascii_part1}${ascii_part2}"
+
+  echo -e "Original binary for \033[31m${char}\033[0m: \033[32m${part1_original}\033[0m\033[94m${part2}\033[0m"
   echo -e "Overlong Binary: ${part1_padding}\033[32m${part1_original}\033[0m ${part2_padding}\033[94m${part2}\033[0m"
   echo "Overlong Hexadecimal: ${hex_part1}${hex_part2}"
 #echo "Second part (binary): $part2_padded"
-  echo "ASCII character: $ascii_part1 $ascii_part2)" >> output.txt
   echo "----------------------"
 done
+echo "Hex string: $hex_final "
+echo "String: $input_string \\n" >> output
+echo "$hex_final \\n" >> output
+echo "$ascii_final \\n" >> output
+echo "-----------------------\\n\\n" >> output
